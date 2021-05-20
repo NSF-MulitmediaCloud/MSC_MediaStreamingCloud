@@ -1,0 +1,5 @@
+1)
+-hello world js created in src/UI folder
+-drafted deployment of the UI
+2)
+-messagequeue deployment should be required in helm chart

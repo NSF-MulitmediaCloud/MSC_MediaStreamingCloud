@@ -1,0 +1,7 @@
+#enable ingress by
+
+minikube addons enable ingress
+kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
+
+#enable load balancer by 
+minikube tunnel

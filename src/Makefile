@@ -1,0 +1,2 @@
+build: 
+	cd UI; make
