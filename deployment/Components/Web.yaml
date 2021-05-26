@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    name: web
+  name: web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webplayer
+  namespace: web
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: webplayer
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: null
+  name: webplayer
+  namespace: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webplayer
+  template:
+    metadata:
+      labels:
+        app: webplayer
+    spec:
+      containers:
+      - image: cxd9974/msc_web:latest
+        name: webplayer
+        ports:
+        - containerPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webplayer-ingress
+  namespace: web
+spec:
+  rules:
+  - host: mynodeapp.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: webplayer
+            port:
+              number: 80
+        path: /test
+        pathType: Prefix
+
