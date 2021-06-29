@@ -2,11 +2,8 @@
 import pika
 import time
 import os
-import MSC_msg.OpType as OpType
-import MSC_msg.SchedulerMsg as SchedulerMsg
-import MSC_msg.MachineReportMsg as MachineReportMsg
-
-import flatbuffers
+from google.protobuf.struct_pb2 import Struct
+import GeneralMsg_pb2 #this file exist in TimeEstimator folder for debug, but it 
 
 RMQHOST="rmq"
 QNAME="timeestimation"
@@ -15,19 +12,14 @@ user=os.environ['USERNAME']
 pswd=os.environ['PASSWORD']
 #print(user+" "+pswd)
 
-
-###### status: something wrong with connection... it worked, now it is not.
-
 ######### Self Initialization 
 PCT={} #make PCT a dictionary 
 ######### Queue Initialization
 thecredential=pika.PlainCredentials(user,pswd)
-#print("Connecting to RMQHOST"+)
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host=RMQHOST,credentials=thecredential))
 channel = connection.channel()
 channel.queue_declare(queue=QNAME)
-msgbuilder=flatbuffers.Builder(1024)
 
 ###### Testing section
 #create mock up distribution
@@ -35,34 +27,25 @@ aDist={}
 aDist['abc']=[10,20,30,40]
 PCT['amachinetype']=aDist
 ######### Send a test message
-selfdest = msgbuilder.CreateString('self')
-atasktype = msgbuilder.CreateString('Resolution')
-amachinetype=msgbuilder.CreateString('abc')
-
-SchedulerMsg.Start(msgbuilder)
-SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().time_query)
-SchedulerMsg.AddReturnDest(msgbuilder,selfdest)
-SchedulerMsg.AddUserId(msgbuilder,0)
-SchedulerMsg.AddPriority(msgbuilder,0)
-SchedulerMsg.AddTaskType(msgbuilder,atasktype)
-SchedulerMsg.AddMachineType(msgbuilder,amachinetype)
-####### finally
-themessage=SchedulerMsg.End(msgbuilder)
-#print(themessage)
-msgbuilder.Finish(themessage)
-
-channel.basic_publish(exchange='', routing_key=QNAME, body=msgbuilder.Output()) #will change qname later, after this test
+testmessage=GeneralMsg_pb2.ServiceRequest()
+testmessage.Operation="time_query"
+testmessage.ReturnDest="self"
+S= Struct()
+S.update({"task_type": "amachinetype"})
+S.update({"machine_type": "abc"})
+print(S)
+testmessage.details['task_type']='amachinetype'
+testmessage.details['machine_type']='abc'
+channel.basic_publish(exchange='', routing_key=QNAME, body=testmessage.SerializeToString()) #will change qname later, after this test
 #ts = ((time.time())*1000)
 #channel.basic_publish(exchange='', routing_key=QNAME, body=str(ts))
 
 
 
 def msghandling(aRequest):
-    print(aRequest)
-    print(aRequest.Operation())
-    if (aRequest.Operation == OpType.OpType.time_query):
-        tasktype=aRequest.TaskType
-        machinetype=aRequest.MachineType
+    if (aRequest.operation == 'time_query'):
+        tasktype=aRequest.details['task_type']
+        machinetype=aRequest.details['machine_type']
 
         machine_distribution=PCT[machinetype]
         if(machine_distribution==None):
@@ -73,25 +56,18 @@ def msghandling(aRequest):
         if(distribution==None):
             print("requested distribution of unknown task type")
             return
-        #so... we have it...  ## to do, retry with mutable message?
-        SchedulerMsg.Start(msgbuilder)
-        SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().time_distribution)
-        SchedulerMsg.AddReturnDest(msgbuilder,selfdest)
-        SchedulerMsg.AddPriority(msgbuilder,0)
-        SchedulerMsg.AddTaskType(msgbuilder,atasktype)
-        SchedulerMsg.AddMachineType(msgbuilder,amachinetype)
-        #set time distribution...
-        #?????
-        #
-        ####### finally
-        themessage=SchedulerMsg.End(msgbuilder)
-        #print(themessage)
-        msgbuilder.Finish(themessage)
-        channel.basic_publish(exchange='', routing_key=QNAME, body=msgbuilder.Output()) #will change qname later, after this test
-    elif (aRequest.Operation ==OpType.OpType.time_learn):
+        #so... we have it... 
+        returnmsg=GeneralMsg_pb2.ServiceRequest()
+        returnmsg.Operation="time_distribution"
+        returnmsg.ReturnDest=""
+        returnmsg.details=Struct()
+        returnmsg.details['task_type']=tasktype
+        returnmsg.details['machine_type']=machinetype
+        channel.basic_publish(exchange='', routing_key=QNAME, body=returnmsg.SerializeToString()) #will change qname later, after this test
+    elif (aRequest.operation =='time_learn'):
         pass
     else:
-        print("unknown request type:"+aRequest.Operation())
+        print("unknown request type:"+aRequest.operation)
 
         pass
 
@@ -105,12 +81,12 @@ def callback(ch, method, properties, body):
     #print("Received " + str(body) + " at " + str(ts)+ " delay="+str(delay))    
     
     print("Received a message")
-    ch.basic_ack(delivery_tag = method.delivery_tag) ## debugging stage, ack first, before parse
-
     #do time estimator thing to 'body'
-    parsedbody = SchedulerMsg.SchedulerMsg.GetRootAs(body,0)
-    
+    # #body = OPERATION, CALLBACKQUEUE, paremeters
+    parsedbody = GeneralMsg_pb2.ServiceRequest()
+    parsedbody.ParseFromString(body)
     msghandling(parsedbody)
+    ch.basic_ack(delivery_tag = method.delivery_tag)
 
 
 ############### String version

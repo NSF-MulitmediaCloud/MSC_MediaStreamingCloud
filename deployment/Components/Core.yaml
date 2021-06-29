@@ -14,7 +14,7 @@ metadata:
   namespace: core
   labels:
     app: rmq
-spec:
+#spec:
 ####### if we want to expose rmq outside the cluster
 #  service:
 #    type: LoadBalancer

@@ -1,0 +1,28 @@
+namespace MSC_msg;
+
+enum OpType : short { time_query, time_distribution, time_learn , machine_query, machine_report, task_order, task_completion}
+
+table SchedulerMsg {
+    operation : OpType;
+    returnDest: string;
+    priority: int8;
+    user_id: int64;
+    task_id: int64;
+    task_type: string;
+    machine_type: string;
+    array_tag: string;
+    arr: [float64];
+    misc_data: string;
+}
+
+table MachineReportMsg {
+    operation : OpType;
+    return_dest: string;
+    priority: int8;
+    machine_id: int64;
+    misc_data: string;
+    float_array_tag: string;
+    float_array: [float64];
+    int_array_tag: string;
+    int_array: [int64];    
+}
