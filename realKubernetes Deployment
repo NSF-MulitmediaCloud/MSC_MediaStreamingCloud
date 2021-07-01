@@ -1,0 +1,10 @@
+#install rabbitmq
+kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
+kubectl krew install rabbitmq
+
+#enable Local Path Provisioner (NOT for production environment), see https://www.rabbitmq.com/kubernetes/operator/quickstart-operator.html
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+kubectl annotate storageclass local-path storageclass.kubernetes.io/is-default-class=true
+
+===
+kubectl apply -f deployment/Components/Core.yaml

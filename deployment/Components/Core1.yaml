@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: null
+  name: timeestimator
+  namespace: core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timeestimator
+  template:
+    metadata:
+      labels:
+        app: timeestimator
+    spec:
+      containers:
+      - image: cxd9974/msc_timeestimator:latest
+        name: timeestimator
+        ports:
+        - containerPort: 5672
+        env:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rmq-default-user
+              key: username
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rmq-default-user
+              key: password
+          ##set PYTHONIOENCODING=UTF-8
+        - name: PYTHONIOENCODING
+          value: "UTF-8"
+          ###debug logs, enable 2 lines below to see print from python, disable on production
+        - name: PYTHONUNBUFFERED
+          value: "1"

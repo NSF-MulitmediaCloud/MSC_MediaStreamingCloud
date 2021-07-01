@@ -36,8 +36,8 @@ aDist['abc']=[10,20,30,40]
 PCT['amachinetype']=aDist
 ######### Send a test message
 selfdest = msgbuilder.CreateString('self')
-atasktype = msgbuilder.CreateString('Resolution')
-amachinetype=msgbuilder.CreateString('abc')
+atasktype = msgbuilder.CreateString('abc')
+amachinetype=msgbuilder.CreateString('amachinetype')
 
 SchedulerMsg.Start(msgbuilder)
 SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().time_query)
@@ -59,20 +59,25 @@ channel.basic_publish(exchange='', routing_key=QNAME, body=msgbuilder.Output()) 
 
 def msghandling(aRequest):
     print(aRequest)
-    print(aRequest.Operation())
-    if (aRequest.Operation == OpType.OpType.time_query):
-        tasktype=aRequest.TaskType
-        machinetype=aRequest.MachineType
-
-        machine_distribution=PCT[machinetype]
-        if(machine_distribution==None):
+    #print(aRequest.Operation())
+    #print("OPTYPE:"+str(OpType.OpType.time_query))
+    if (aRequest.Operation() == OpType.OpType.time_query):
+        tasktype=aRequest.TaskType().decode('UTF-8')
+        machinetype=aRequest.MachineType().decode('UTF-8')
+        print("machinetype=")
+        print(tasktype)
+        print("tasktype=")
+        print(machinetype)
+        
+        
+        if(not machinetype in PCT):
             print("requested distribution of unknown machine type")
             return
-        
-        distribution=machine_distribution[tasktype]
-        if(distribution==None):
+        machine_distribution=PCT[machinetype]
+        if(not tasktype in machine_distribution):
             print("requested distribution of unknown task type")
             return
+        distribution=machine_distribution[tasktype]
         #so... we have it...  ## to do, retry with mutable message?
         SchedulerMsg.Start(msgbuilder)
         SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().time_distribution)
@@ -88,10 +93,10 @@ def msghandling(aRequest):
         #print(themessage)
         msgbuilder.Finish(themessage)
         channel.basic_publish(exchange='', routing_key=QNAME, body=msgbuilder.Output()) #will change qname later, after this test
-    elif (aRequest.Operation ==OpType.OpType.time_learn):
+    elif (aRequest.Operation() ==OpType.OpType.time_learn):
         pass
     else:
-        print("unknown request type:"+aRequest.Operation())
+        print("unknown request type:"+str(aRequest.Operation()))
 
         pass
 
