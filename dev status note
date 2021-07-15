@@ -3,3 +3,13 @@
 -drafted deployment of the UI
 2)
 -messagequeue deployment should be required in helm chart
+
+
+---remote dev
+using Telepresence
+
+//working on core
+telepresence --swap-deployment timeestimator --namespace core
+///browse to file
+python3 TimeEstimator.py
+

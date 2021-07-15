@@ -10,9 +10,13 @@ import flatbuffers
 
 RMQHOST="rmq"
 QNAME="timeestimation"
+LOGQNAME="logqueue"
+MYROLE="TimeEstimator"
+
 
 user=os.environ['USERNAME']
 pswd=os.environ['PASSWORD']
+#loglvl=os.environ['LOGLVL']
 #print(user+" "+pswd)
 
 
@@ -34,27 +38,6 @@ msgbuilder=flatbuffers.Builder(1024)
 aDist={}
 aDist['abc']=[10,20,30,40]
 PCT['amachinetype']=aDist
-######### Send a test message
-selfdest = msgbuilder.CreateString('self')
-atasktype = msgbuilder.CreateString('abc')
-amachinetype=msgbuilder.CreateString('amachinetype')
-
-SchedulerMsg.Start(msgbuilder)
-SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().time_query)
-SchedulerMsg.AddReturnDest(msgbuilder,selfdest)
-SchedulerMsg.AddUserId(msgbuilder,0)
-SchedulerMsg.AddPriority(msgbuilder,0)
-SchedulerMsg.AddTaskType(msgbuilder,atasktype)
-SchedulerMsg.AddMachineType(msgbuilder,amachinetype)
-####### finally
-themessage=SchedulerMsg.End(msgbuilder)
-#print(themessage)
-msgbuilder.Finish(themessage)
-
-channel.basic_publish(exchange='', routing_key=QNAME, body=msgbuilder.Output()) #will change qname later, after this test
-#ts = ((time.time())*1000)
-#channel.basic_publish(exchange='', routing_key=QNAME, body=str(ts))
-
 
 
 def msghandling(aRequest):
@@ -64,6 +47,7 @@ def msghandling(aRequest):
     if (aRequest.Operation() == OpType.OpType.time_query):
         tasktype=aRequest.TaskType().decode('UTF-8')
         machinetype=aRequest.MachineType().decode('UTF-8')
+        ReturnDestination=aRequest.MachineType().decode('UTF-8')
         print("machinetype=")
         print(tasktype)
         print("tasktype=")
@@ -92,7 +76,7 @@ def msghandling(aRequest):
         themessage=SchedulerMsg.End(msgbuilder)
         #print(themessage)
         msgbuilder.Finish(themessage)
-        channel.basic_publish(exchange='', routing_key=QNAME, body=msgbuilder.Output()) #will change qname later, after this test
+        channel.basic_publish(exchange='', routing_key=ReturnDestination, body=msgbuilder.Output()) #will change qname later, after this test
     elif (aRequest.Operation() ==OpType.OpType.time_learn):
         pass
     else:
@@ -116,28 +100,6 @@ def callback(ch, method, properties, body):
     parsedbody = SchedulerMsg.SchedulerMsg.GetRootAs(body,0)
     
     msghandling(parsedbody)
-
-
-############### String version
-    # msg=body.decode().split()
-    # if(len(msg)>3):
-    #     returnqueuename=msg[1]
-    #     if(msg[0]=='time_query'):
-    #         aPCT=PCT.get(msg[2])
-    #         if(aPCT != None):
-    #             distribution=aPCT.get(msg[3])
-    #             if(distribution != None):
-    #                 channel.basic_publish(exchange='', routing_key=returnqueuename, body='time_return '+msg[2]+' '+msg[3]+' '+str(distribution))
-    #     elif (msg[1]=='time_learn'):
-    #         #pass
-    #         s = Struct()
-            
-    #     else:
-    #         channel.basic_publish(exchange='', routing_key=returnqueuename, body='Error, Unknown operation received')
-
-
-    #
-
 
 
 ###### which will be received by...

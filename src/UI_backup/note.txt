@@ -1,0 +1,2 @@
+adapt from 
+https://www.digitalocean.com/community/tech_talks/how-to-deploy-a-resilient-node-js-application-on-kubernetes-from-scratch

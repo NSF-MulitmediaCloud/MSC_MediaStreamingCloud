@@ -1,2 +1,24 @@
-adapt from 
-https://www.digitalocean.com/community/tech_talks/how-to-deploy-a-resilient-node-js-application-on-kubernetes-from-scratch
+https://www.w3schools.com/react/default.asp
+
+DEV:
+####just in case, you have old nodejs -> remove old, install new version
+sudo apt-get purge --auto-remove nodejs
+sudo apt-get install curl 
+curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash - 
+
+####
+#create app
+sudo -i npm install -g create-react-app
+npx create-react-app streaming
+cd streaming
+npm i react-hls-player@3.0.7 --legacy-peer-deps
+npm install @material-ui/core
+
+### 
+# file to work on:
+streaming/src/index.js
+
+###
+#test
+cd ./streaming
+npm start
