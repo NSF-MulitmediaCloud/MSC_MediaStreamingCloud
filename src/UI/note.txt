@@ -19,6 +19,20 @@ npm install @material-ui/core
 streaming/src/index.js
 
 ###
-#test
+#test (quick run)
 cd ./streaming
 npm start
+
+#test container (after make)
+//// Work
+docker run -it -p 3001:3000 cxd9974/msc_web:latest
+
+//// Doesn't work
+docker run \
+    -it \
+    --rm \
+    -v ${PWD}:/app \
+    -v /app/node_modules \
+    -p 3001:3000 \
+    -e CHOKIDAR_USEPOLLING=true \
+    cxd9974/msc_web:latest

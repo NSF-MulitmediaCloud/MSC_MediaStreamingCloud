@@ -2,14 +2,20 @@ FROM node:16-alpine3.11
 
 WORKDIR /app
 
-COPY ./streaming ./
+ENV PATH /app/node_modules/.bin:$PATH
 
-RUN npm install --production
 
-RUN npm install @material-ui/core
+COPY streaming/package.json ./
+COPY streaming/package-lock.json ./
 
+RUN npm install --silent
+
+RUN npm install react-scripts@4.0.3 -g --silent
+
+
+COPY ./streaming/ ./
 
 
 EXPOSE 3000
 
-CMD ["node","index.js"]
+CMD ["npm","start"]

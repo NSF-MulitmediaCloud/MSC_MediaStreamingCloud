@@ -1,22 +1,11 @@
 import React from "react";
 import ReactHlsPlayer from "react-hls-player";
+import Context from "../store/user-context";
 
 function Player(props) {
-  const playerRef = props.playerRef;
-  //const playerRef = React.createRef();
-  //this.playerRef=playerRef;
-  function playVideo() {
-    playerRef.current.play();
-  }
-
-  function pauseVideo() {
-    playerRef.current.pause();
-  }
-
-  function toggleControls() {
-    playerRef.current.controls = !playerRef.current.controls;
-  }
-
+  const userContext = React.useContext(Context);
+  const playerRef = React.useRef();
+  userContext.addVideoPlayer(playerRef.current);
   return (
     <ReactHlsPlayer
       playerRef={playerRef}
