@@ -13,8 +13,8 @@ ReactDOM.render(
   <BrowserRouter>
     <App />
   </BrowserRouter>
-  </UserContextProvider>,
-  document.getElementById("root")
+  </UserContextProvider>
+  ,document.getElementById("root")
 );
 
 //ReactDOM.render(<MyCustomComponent />, document.getElementById("app"));

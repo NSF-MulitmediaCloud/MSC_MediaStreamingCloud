@@ -7,15 +7,25 @@ const SettingContext = React.createContext({
   addFunction: (userFunction) => {},
   removeFunction: (FunctionID) => {},
   functionIsEmployed: (FunctionID) =>{},
-  addVideoPlayer: (videoPlayer) => {}
+  addVideoPlayer: (videoPlayer) => {},
+  addVideoPlayerO: (videoPlayerO) => {}
+
 });
 export function UserContextProvider(props) {
   const [userFunctions, setUserFunctions] = React.useState([]);
   const [videoPlayers,setVideoPlayers] = React.useState(0);
+  const [videoPlayersO,setVideoPlayersO] = React.useState(0);
+
   function addVideoPlayerHandler(videoPlayer){
     //return Vidplayer=videoPlayer;
     setVideoPlayers((prevvideoPlayer) => {
         return prevvideoPlayer=(videoPlayer);
+    });
+  }
+  function addVideoPlayerOHandler(videoPlayersO){
+    //return Vidplayer=videoPlayer;
+    setVideoPlayersO((prevvideoPlayerO) => {
+        return prevvideoPlayerO=(videoPlayersO);
     });
   }
   function addFunctionHandler(userFunction){
@@ -36,12 +46,14 @@ export function UserContextProvider(props) {
 
   const context = {
     videoplayer: videoPlayers,
+    videoplayerO: videoPlayersO,
     myfunctions: userFunctions,
     fncount: userFunctions.length,
     addFunction: addFunctionHandler,
     removeFunction: removeFunctionHandler,
     functionIsEmployed: functionIsEmployedHandler,
-    addVideoPlayer: addVideoPlayerHandler
+    addVideoPlayer: addVideoPlayerHandler,
+    addVideoPlayerO: addVideoPlayerOHandler
 };
 
   return (

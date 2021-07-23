@@ -40,6 +40,10 @@ spec:
         name: webplayer
         ports:
         - containerPort: 3000
+        env:
+        - name: requesturl
+          value: "localhost:60008"
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -58,4 +62,3 @@ spec:
               number: 80
         path: /test
         pathType: Prefix
-

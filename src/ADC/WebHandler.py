@@ -47,6 +47,7 @@ class Server(BaseHTTPRequestHandler):
 
         # add a property to the object, just to mess with data
         message['received'] = 'ok'
+        message['returnedurl']='bug'
         
         # send the message back
         self._set_headers()

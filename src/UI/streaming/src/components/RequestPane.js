@@ -1,3 +1,4 @@
+import process from 'process';
 import React from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -14,10 +15,19 @@ import Modal from "./Modal";
 import Backdrop from "./Backdrop";
 import Context from "../store/user-context";
 
-function ControlPane(props) {
-  const Webportal_addr='http://localhost:60008';
+function RequestPane(props) {
+  var Webportal_addr="";
+
+  if(process.env.requesturl){
+    Webportal_addr=process.env.requesturl;
+  }else{
+  Webportal_addr='http://localhost:60008';
+}
   const ControlRef = React.useRef();
-  const vidsrc = React.useRef();
+  var vidsrc = React.useRef(); 
+  //const [vidsrc, setvidsrc] = React.useState();
+
+  
   const resXref = React.useRef();
   const resYref = React.useRef();
   const frref = React.useRef();
@@ -45,7 +55,7 @@ function ControlPane(props) {
       resXref.current.value +
       "x" +
       resYref.current.value;
-    if (color != "normal") {
+    if (color !== "normal") {
       ffoptions += color;
     }
     ffoptions += rotate;
@@ -63,6 +73,11 @@ function ControlPane(props) {
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
+      if(data['returnedurl']){
+        console.log(data['returnedurl'])
+        vidsrc.value=(data['returnedurl']);
+        console.log(vidsrc.value);
+      }
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -77,6 +92,10 @@ function ControlPane(props) {
   const handleChangeRotate = (event) => {
     setRotate(event.target.value);
   };
+  // const handleChangeSource = (event) => {
+  //   setvidsrc(event.target.value);
+  // };
+  
   const handleChangeAudio = (event) => {
     setAudio(event.target.value);
   };
@@ -86,18 +105,12 @@ function ControlPane(props) {
   const handleChangeCodec = (event) => {
     setCodec(event.target.value);
   };
-  function playVideo() {
-    userContext.videoplayer.play();
+  function loadandPlayVideo(vsource){
+    console.log("reload from: "+vsource);
+    //userContext.videoplayerO.setAttribute('src', vsource);
+    props.vctrl.current.handleChangeURL(vsource);
   }
-  function pauseVideo() {
-    userContext.videoplayer.pause();
-  }
-  function toggleControls() {
-    userContext.videoplayer.controls = !userContext.videoplayer.controls;
-  }
-  function togglePlay() {
-    userContext.videoplayer.paused ? playVideo() : pauseVideo();
-  }
+
   function reload() {
     //console.log("clicked");
     setModalIsOpen(true);
@@ -106,18 +119,13 @@ function ControlPane(props) {
     setModalIsOpen(false);
   }
   function confirmHandler() {
-    console.log("reloaded" + vidsrc.current.test);
+    loadandPlayVideo(vidsrc.value);
+    console.log("reloaded " + vidsrc.value);
     setModalIsOpen(false);
   }
   return (
-    <div id="control pane">
-      <h2>Control Pane</h2>
-      <Button variant="contained" color="primary" onClick={togglePlay}>
-        Play/Pause
-      </Button>
-      <Button variant="contained" color="primary" onClick={toggleControls}>
-        Ctrl on/off
-      </Button>
+    <div id="request pane">
+      <h2>Request Pane</h2>
       <div>
         <form onSubmit={submitHandler}>
           <FormControl>
@@ -249,8 +257,8 @@ function ControlPane(props) {
       <TextField
             label="Video Source"
             variant="filled"
-            defaultValue="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
-            ref={vidsrc}
+            defaultValue="https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+            inputRef={(input) => vidsrc = input}
           />
         <Button variant="contained" color="secondary" onClick={reload}>
           Reload
@@ -264,4 +272,4 @@ function ControlPane(props) {
   );
 }
 //export default MyCustomComponent;
-export default ControlPane;
+export default RequestPane;
