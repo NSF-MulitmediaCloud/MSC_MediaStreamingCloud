@@ -1,5 +1,7 @@
 https://www.w3schools.com/react/default.asp
 
+WEB: http://10.131.36.27:8080/
+
 DEV:
 ####just in case, you have old nodejs -> remove old, install new version
 sudo apt-get purge --auto-remove nodejs

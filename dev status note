@@ -9,7 +9,7 @@
 using Telepresence
 
 //working on core
-telepresence --swap-deployment timeestimator --namespace core
+telepresence --swap-deployment taskscheduler --namespace core
 ///browse to file
 python3 TimeEstimator.py
 

@@ -6,5 +6,12 @@ kubectl krew install rabbitmq
 kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 kubectl annotate storageclass local-path storageclass.kubernetes.io/is-default-class=true
 
+#enable a lot of image pull (after login to Dockerhub)
+kubectl create secret generic regcred     --from-file=.dockerconfigjson=/home/c00251686/.docker/config.json     --type=kubernetes.io/dockerconfigjson -n core
+kubectl create secret generic regcred     --from-file=.dockerconfigjson=/home/c00251686/.docker/config.json     --type=kubernetes.io/dockerconfigjson -n web
+
+
+FROM:https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+
 ===
 kubectl apply -f deployment/Components/Core.yaml

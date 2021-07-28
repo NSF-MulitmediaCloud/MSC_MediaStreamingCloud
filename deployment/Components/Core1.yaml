@@ -1,3 +1,4 @@
+## dev part of the core. unfinished
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,3 +37,51 @@ spec:
          ###debug logs, enable 2 lines below to see print from python, disable on production
        - name: PYTHONUNBUFFERED
          value: "1"
+     imagePullSecrets:
+     - name: regcred
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: null
+  name: adc
+  namespace: core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adc
+  template:
+    metadata:
+      labels:
+        app: adc
+    spec:
+      containers:
+      - image: cxd9974/msc_admissioncontrol:latest
+        name: adc
+        ports:
+        - containerPort: 3000
+        env:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+          ###test this...
+              name: rmq-default-user
+              key: username
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rmq-default-user
+              key: password
+        - name: PORT
+          value: "60008"
+          ##set PYTHONIOENCODING=UTF-8
+        - name: PYTHONIOENCODING
+          value: "UTF-8"
+          ###debug logs, enable 2 lines below to see print from python, disable on production
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: schedulerurl
+          value: "scheduler"
+      imagePullSecrets:
+      - name: regcred

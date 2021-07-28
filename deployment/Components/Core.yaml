@@ -1,32 +1,16 @@
 apiVersion: v1
-kind: Namespace
+kind: Service
 metadata:
-  labels:
-    name: core
-  name: core
----
-#check more at https://www.rabbitmq.com/kubernetes/operator/using-operator.html
-#and https://github.com/rabbitmq/cluster-operator/tree/main/docs/examples/production-ready
-apiVersion: rabbitmq.com/v1beta1
-kind: RabbitmqCluster
-metadata:
-  name: rmq
+  name: adc
   namespace: core
-  labels:
-    app: rmq
-#spec:
-####### if we want to expose rmq outside the cluster
-#  service:
-#    type: LoadBalancer
-####### if we want to limit resource...
-#  replicas: 1
-#  resources:
-#    requests:
-#      cpu: 500m
-#      memory: 1Gi
-#    limits:
-#      cpu: 800m
-#      memory: 1Gi
+spec: 
+  ports:
+  - port: 60008
+    protocol: TCP
+    targetPort: 60008
+  selector:
+    app: adc
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -66,4 +50,46 @@ spec:
          ###debug logs, enable 2 lines below to see print from python, disable on production
        - name: PYTHONUNBUFFERED
          value: "1"
-# NOT stable yet
+     imagePullSecrets:
+     - name: regcred
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ labels: null
+ name: taskscheduler
+ namespace: core
+spec:
+ replicas: 1
+ selector:
+   matchLabels:
+     app: taskscheduler
+ template:
+   metadata:
+     labels:
+       app: taskscheduler
+   spec:
+     containers:
+     - image: cxd9974/msc_taskscheduler:latest
+       name: taskscheduler
+       ports:
+       - containerPort: 5672
+       env:
+       - name: USERNAME
+         valueFrom:
+           secretKeyRef:
+             name: rmq-default-user
+             key: username
+       - name: PASSWORD
+         valueFrom:
+           secretKeyRef:
+             name: rmq-default-user
+             key: password
+         ##set PYTHONIOENCODING=UTF-8
+       - name: PYTHONIOENCODING
+         value: "UTF-8"
+         ###debug logs, enable 2 lines below to see print from python, disable on production
+       - name: PYTHONUNBUFFERED
+         value: "1"
+     imagePullSecrets:
+     - name: regcred

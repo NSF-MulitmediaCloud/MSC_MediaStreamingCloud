@@ -16,13 +16,9 @@ import Backdrop from "./Backdrop";
 import Context from "../store/user-context";
 
 function RequestPane(props) {
-  var Webportal_addr="";
+    //console.log(process.env);
+  const Webportal_addr = process.env.REACT_APP_REQURL || 'reqforward'; //'http://adc.core:60008';
 
-  if(process.env.requesturl){
-    Webportal_addr=process.env.requesturl;
-  }else{
-  Webportal_addr='http://localhost:60008';
-}
   const ControlRef = React.useRef();
   var vidsrc = React.useRef(); 
   //const [vidsrc, setvidsrc] = React.useState();

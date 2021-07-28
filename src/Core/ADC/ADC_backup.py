@@ -1,7 +1,29 @@
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-import SocketServer
-import json
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import json # for front end
+import flatbuffers # for back end
 import cgi
+import pika
+import MSC_msg.OpType as OpType
+import MSC_msg.SchedulerMsg as SchedulerMsg
+import os
+
+RMQHOST="rmq"
+SENDQNAME="scheduler"
+LOGQNAME="logqueue"
+MYROLE="AdmissionControl"
+
+user=os.environ['USERNAME']
+pswd=os.environ['PASSWORD']
+myport=int(os.environ['PORT'])
+
+######### Queue Initialization
+thecredential=pika.PlainCredentials(user,pswd)
+#print("Connecting to RMQHOST"+)
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host=RMQHOST,credentials=thecredential))
+channel = connection.channel()
+channel.queue_declare(queue=SENDQNAME)
+msgbuilder=flatbuffers.Builder(1024)
 
 class Server(BaseHTTPRequestHandler):
     def do_OPTIONS(self):           
@@ -49,15 +71,23 @@ class Server(BaseHTTPRequestHandler):
         message['received'] = 'ok'
         message['returnedurl']='bug'
         
-        # send the message back
+        # send the message back, will move this code up later
         self._set_headers()
         self.wfile.write(json.dumps(message))
+        ### now, forward message to scheduler, on RMQ
+        #SchedulerMsg.Start(msgbuilder)
+        #SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().time_distribution)
+        #...
+        themessage=SchedulerMsg.End(msgbuilder)
+        msgbuilder.Finish(themessage)
+        channel.basic_publish(exchange='', routing_key=SENDQNAME, body=msgbuilder.Output()) #will change qname later, after this test
+
         
-def run(server_class=HTTPServer, handler_class=Server, port=60008):
+def run(server_class=HTTPServer, handler_class=Server, port=myport):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     
-    print 'Starting httpd on port %d...' % port
+    print ('Starting httpd on port %d...',port);
     httpd.serve_forever()
     
 if __name__ == "__main__":

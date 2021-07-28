@@ -63,6 +63,9 @@ def msghandling(aRequest):
             return
         distribution=machine_distribution[tasktype]
         #so... we have it...  ## to do, retry with mutable message?
+        selfdest=msgbuilder.CreateString("")
+        atasktype=msgbuilder.CreateString(tasktype)
+        amachinetype=msgbuilder.CreateString(machinetype)
         SchedulerMsg.Start(msgbuilder)
         SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().time_distribution)
         SchedulerMsg.AddReturnDest(msgbuilder,selfdest)
