@@ -4,11 +4,13 @@ enum OpType : short { time_query, time_distribution, time_learn , machine_query,
 
 table SchedulerMsg {
     operation : OpType;
-    returnDest: string;
+    return_dest: string;
     priority: int8;
     user_id: int64;
     task_id: int64;
     task_type: string;
+    media_id: int64;
+    segment_number: int32;
     machine_type: string;
     array_tag: string;
     arr: [float64];

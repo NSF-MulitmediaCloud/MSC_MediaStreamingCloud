@@ -52,6 +52,7 @@ class Server(BaseHTTPRequestHandler):
     # POST echoes the message adding a JSON field
     def do_POST(self):
         print("Post method")
+        ########## front end part
         length = int(self.headers.get('content-length'))
         message = json.loads(self.rfile.read(length))
             
@@ -64,22 +65,28 @@ class Server(BaseHTTPRequestHandler):
         # send the message back, will move this code up later
         self._set_headers()
         self.wfile.write(json.dumps(message).encode('utf-8'))
+        ########## back end part
+        ###### TODO: get number of sections from db (not existing yet).
+        ###### tmp solution: request section 0-7 only
+        
         ### now, forward message to scheduler, on RMQ
         atasktype=msgbuilder.CreateString("ffmpeg-1")
         amachinetype=msgbuilder.CreateString("amachinetype")
-        
-        SchedulerMsg.Start(msgbuilder)
-        SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().task_order)
-        #SchedulerMsg.AddReturnDest(msgbuilder,selfdest) #no return destination
-        SchedulerMsg.AddPriority(msgbuilder,0)
-        SchedulerMsg.AddTaskType(msgbuilder,atasktype)
-        SchedulerMsg.AddMachineType(msgbuilder,amachinetype)
 
         #...
-        
-        themessage=SchedulerMsg.End(msgbuilder)
-        msgbuilder.Finish(themessage)
-        channel.basic_publish(exchange='', routing_key=SENDQNAME, body=msgbuilder.Output()) #will change qname later, after this test
+        ####### Test rebuild multi msg
+        for i in range(0,5):
+            SchedulerMsg.Start(msgbuilder)
+            SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().task_order)
+            #SchedulerMsg.AddReturnDest(msgbuilder,selfdest) #no return destination
+            SchedulerMsg.AddPriority(msgbuilder,0)
+            SchedulerMsg.AddTaskType(msgbuilder,atasktype)
+            SchedulerMsg.AddMachineType(msgbuilder,amachinetype)
+            SchedulerMsg.AddMediaId(msgbuilder,message['vidnum'])
+            SchedulerMsg.AddSegmentNumber(msgbuilder,i)
+            themessage=SchedulerMsg.End(msgbuilder)
+            msgbuilder.Finish(themessage)
+            channel.basic_publish(exchange='', routing_key=SENDQNAME, body=msgbuilder.Output()) #will change qname later, after this test
 
         
 def run(server_class=HTTPServer, handler_class=Server, port=myport):

@@ -9,9 +9,9 @@ import MSC_msg.MachineReportMsg as MachineReportMsg
 import flatbuffers
 
 RMQHOST="rmq"
-QNAME="timeestimation"
+QNAME="scheduler"
 LOGQNAME="logqueue"
-MYROLE="TimeEstimator"
+MYROLE="Scheduler"
 
 
 user=os.environ['USERNAME']
@@ -33,29 +33,8 @@ channel = connection.channel()
 channel.queue_declare(queue=QNAME)
 msgbuilder=flatbuffers.Builder(1024)
 
-###### Testing section
-#create mock up distribution
-aDist={}
-aDist['abc']=[10,20,30,40]
-PCT['amachinetype']=aDist
 ######### Send a test message
-selfdest = msgbuilder.CreateString('self')
-atasktype = msgbuilder.CreateString('abc')
-amachinetype=msgbuilder.CreateString('amachinetype')
-
-SchedulerMsg.Start(msgbuilder)
-SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().time_query)
-SchedulerMsg.AddReturnDest(msgbuilder,selfdest)
-SchedulerMsg.AddUserId(msgbuilder,0)
-SchedulerMsg.AddPriority(msgbuilder,0)
-SchedulerMsg.AddTaskType(msgbuilder,atasktype)
-SchedulerMsg.AddMachineType(msgbuilder,amachinetype)
-####### finally
-themessage=SchedulerMsg.End(msgbuilder)
 #print(themessage)
-msgbuilder.Finish(themessage)
-
-channel.basic_publish(exchange='', routing_key=QNAME, body=msgbuilder.Output()) #will change qname later, after this test
 #ts = ((time.time())*1000)
 #channel.basic_publish(exchange='', routing_key=QNAME, body=str(ts))
 
@@ -65,30 +44,25 @@ def msghandling(aRequest):
     print(aRequest)
     #print(aRequest.Operation())
     #print("OPTYPE:"+str(OpType.OpType.time_query))
-    if (aRequest.Operation() == OpType.OpType.time_query):
+    if (aRequest.Operation() == OpType.OpType.task_order):
         tasktype=aRequest.TaskType().decode('UTF-8')
         machinetype=aRequest.MachineType().decode('UTF-8')
-        print("machinetype=")
-        print(tasktype)
-        print("tasktype=")
-        print(machinetype)
-        
-        
-        if(not machinetype in PCT):
-            print("requested distribution of unknown machine type")
-            return
-        machine_distribution=PCT[machinetype]
-        if(not tasktype in machine_distribution):
-            print("requested distribution of unknown task type")
-            return
-        distribution=machine_distribution[tasktype]
-        #so... we have it...  ## to do, retry with mutable message?
+        print("machinetype= %s",machinetype)
+        print("tasktype= %s",tasktype)
+        #Ask time estimator
+        selfdest=msgbuilder.CreateString(QNAME)
+        atasktype=msgbuilder.CreateString(aRequest.TaskType())
+        amachinetype=msgbuilder.CreateString(aRequest.MachineType())
         SchedulerMsg.Start(msgbuilder)
         SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().time_distribution)
         SchedulerMsg.AddReturnDest(msgbuilder,selfdest)
         SchedulerMsg.AddPriority(msgbuilder,0)
         SchedulerMsg.AddTaskType(msgbuilder,atasktype)
         SchedulerMsg.AddMachineType(msgbuilder,amachinetype)
+        SchedulerMsg.AddMediaId(msgbuilder,aRequest.MediaId())
+        SchedulerMsg.AddSegmentNumber(msgbuilder,aRequest.SegmentNumber())
+        
+        
         #set time distribution...
         #?????
         #
@@ -97,7 +71,8 @@ def msghandling(aRequest):
         #print(themessage)
         msgbuilder.Finish(themessage)
         channel.basic_publish(exchange='', routing_key=QNAME, body=msgbuilder.Output()) #will change qname later, after this test
-    elif (aRequest.Operation() ==OpType.OpType.time_learn):
+    elif (aRequest.Operation() ==OpType.OpType.time_distribution):
+        print("got time dist msg")
         pass
     else:
         print("unknown request type:"+str(aRequest.Operation()))

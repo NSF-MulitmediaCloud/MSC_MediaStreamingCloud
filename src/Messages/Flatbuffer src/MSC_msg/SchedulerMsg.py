@@ -67,22 +67,36 @@ class SchedulerMsg(object):
         return None
 
     # SchedulerMsg
-    def MachineType(self):
+    def MediaId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # SchedulerMsg
+    def SegmentNumber(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # SchedulerMsg
+    def MachineType(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # SchedulerMsg
     def ArrayTag(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # SchedulerMsg
     def Arr(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -90,31 +104,31 @@ class SchedulerMsg(object):
 
     # SchedulerMsg
     def ArrAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # SchedulerMsg
     def ArrLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SchedulerMsg
     def ArrIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
     # SchedulerMsg
     def MiscData(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(10)
+def Start(builder): builder.StartObject(12)
 def SchedulerMsgStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -142,15 +156,23 @@ def AddTaskType(builder, taskType): builder.PrependUOffsetTRelativeSlot(5, flatb
 def SchedulerMsgAddTaskType(builder, taskType):
     """This method is deprecated. Please switch to AddTaskType."""
     return AddTaskType(builder, taskType)
-def AddMachineType(builder, machineType): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(machineType), 0)
+def AddMediaId(builder, mediaId): builder.PrependInt64Slot(6, mediaId, 0)
+def SchedulerMsgAddMediaId(builder, mediaId):
+    """This method is deprecated. Please switch to AddMediaId."""
+    return AddMediaId(builder, mediaId)
+def AddSegmentNumber(builder, segmentNumber): builder.PrependInt32Slot(7, segmentNumber, 0)
+def SchedulerMsgAddSegmentNumber(builder, segmentNumber):
+    """This method is deprecated. Please switch to AddSegmentNumber."""
+    return AddSegmentNumber(builder, segmentNumber)
+def AddMachineType(builder, machineType): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(machineType), 0)
 def SchedulerMsgAddMachineType(builder, machineType):
     """This method is deprecated. Please switch to AddMachineType."""
     return AddMachineType(builder, machineType)
-def AddArrayTag(builder, arrayTag): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(arrayTag), 0)
+def AddArrayTag(builder, arrayTag): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(arrayTag), 0)
 def SchedulerMsgAddArrayTag(builder, arrayTag):
     """This method is deprecated. Please switch to AddArrayTag."""
     return AddArrayTag(builder, arrayTag)
-def AddArr(builder, arr): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(arr), 0)
+def AddArr(builder, arr): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(arr), 0)
 def SchedulerMsgAddArr(builder, arr):
     """This method is deprecated. Please switch to AddArr."""
     return AddArr(builder, arr)
@@ -158,7 +180,7 @@ def StartArrVector(builder, numElems): return builder.StartVector(8, numElems, 8
 def SchedulerMsgStartArrVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartArrVector(builder, numElems)
-def AddMiscData(builder, miscData): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(miscData), 0)
+def AddMiscData(builder, miscData): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(miscData), 0)
 def SchedulerMsgAddMiscData(builder, miscData):
     """This method is deprecated. Please switch to AddMiscData."""
     return AddMiscData(builder, miscData)
