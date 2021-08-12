@@ -29,6 +29,10 @@ spec:
       labels:
         app: webplayer
     spec:
+      volumes:
+        - name: outdir
+          persistentVolumeClaim:
+            claimName: out-pvc    
       containers:
       - image: cxd9974/msc_web:latest
         name: webplayer
@@ -37,6 +41,9 @@ spec:
         env:
         - name: REACT_APP_REQURL
           value: "adc.core:60008"
+        volumeMounts:
+          - mountPath: /sharedir/outdir
+            name: repodir
       imagePullSecrets:
       - name: regcred
 ---

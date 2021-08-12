@@ -36,7 +36,7 @@ msgbuilder=flatbuffers.Builder(1024)
 ###### Testing section
 #create mock up distribution
 aDist={}
-aDist['abc']=[10,20,30,40]
+aDist['ffmpeg-1']=[10,20,30,40]
 PCT['amachinetype']=aDist
 
 
@@ -65,6 +65,7 @@ def msghandling(aRequest):
         #so... we have it...  ## to do, retry with mutable message?
         selfdest=msgbuilder.CreateString("")
         atasktype=msgbuilder.CreateString(tasktype)
+        arrtag=msgbuilder.CreateString("timedist")
         amachinetype=msgbuilder.CreateString(machinetype)
         SchedulerMsg.Start(msgbuilder)
         SchedulerMsg.AddOperation(msgbuilder,OpType.OpType().time_distribution)
@@ -73,7 +74,8 @@ def msghandling(aRequest):
         SchedulerMsg.AddTaskType(msgbuilder,atasktype)
         SchedulerMsg.AddMachineType(msgbuilder,amachinetype)
         #set time distribution...
-        #?????
+        SchedulerMsg.AddArrayTag(msgbuilder,arrtag)
+        SchedulerMsg.AddArr(msgbuilder,distribution)
         #
         ####### finally
         themessage=SchedulerMsg.End(msgbuilder)

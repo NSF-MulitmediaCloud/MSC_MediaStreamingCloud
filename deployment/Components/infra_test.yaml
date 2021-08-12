@@ -1,0 +1,112 @@
+################ Experimental part
+### read https://docs.openshift.com/enterprise/3.1/install_config/storage_examples/shared_storage.html
+# ---
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: example-nfs
+# provisioner: example.com/external-nfs
+# parameters:
+#   server: 10.131.36.27
+#   path: /sharedir
+#   #readOnly: false
+
+### Test this instead https://levelup.gitconnected.com/how-to-use-nfs-in-kubernetes-cluster-storage-class-ed1179a83817
+
+---
+### for core (soon to be change to worker workspace)
+### mount /sharedir/sampleRepo as read only and /sharedir/outdir as read-write
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: repo-pv 
+  namespace: core
+spec:
+  storageClassName: nfs-direct
+  capacity:
+    storage: 2Gi 
+  accessModes:
+    - ReadOnlyMany 
+  persistentVolumeReclaimPolicy: Retain 
+  nfs: 
+    path: /sharedir/sampleRepo
+    server: 10.131.36.27
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: out-pv 
+  namespace: core
+spec:
+  storageClassName: nfs-direct
+  capacity:
+    storage: 2Gi 
+  accessModes:
+    - ReadWriteMany 
+  persistentVolumeReclaimPolicy: Retain 
+  nfs: 
+    path: /sharedir/outdir
+    server: 10.131.36.27
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: repo-pvc
+    namespace: core
+spec:
+    accessModes:
+      - ReadOnlyMany
+    storageClassName: nfs-direct
+    volumeName: repo-pv
+    resources:
+        requests:
+            storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: out-pvc
+    namespace: core
+spec:
+    accessModes:
+      - ReadWriteMany
+    storageClassName: nfs-direct
+    volumeName: out-pv
+    resources:
+        requests:
+            storage: 2Gi
+
+######## For Web mount outdir as read-only (cannot upload yet)
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: out-pv 
+  namespace: web
+spec:
+  storageClassName: nfs-direct
+  capacity:
+    storage: 2Gi 
+  accessModes:
+    - ReadOnlyMany 
+  persistentVolumeReclaimPolicy: Retain 
+  nfs: 
+    path: /sharedir/outdir
+    server: 10.131.36.27
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: out-pvc
+    namespace: web
+spec:
+    accessModes:
+      - ReadOnlyMany
+    storageClassName: nfs-direct
+    volumeName: test-pv
+    resources:
+        requests:
+            storage: 2Gi

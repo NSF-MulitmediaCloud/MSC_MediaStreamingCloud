@@ -13,5 +13,13 @@ kubectl create secret generic regcred     --from-file=.dockerconfigjson=/home/c0
 
 FROM:https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 
+
+#restart nfs (on VM3)
+sudo systemctl restart nfs-kernel-server
+#(if not set up, follow:
+https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nfs-mount-on-ubuntu-20-04
+to host /sharedir on VM3, and mount /sharedir of VM2 to VM3
+# to create shared dir
+
 ===
 kubectl apply -f deployment/Components/Core.yaml

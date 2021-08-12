@@ -1,0 +1,58 @@
+### Test in core first, then we could move to dedicated namespace later
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: null
+  name: worker
+  namespace: core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      volumes:
+        - name: repodir
+          persistentVolumeClaim:
+            claimName: repo-pvc
+        - name: outdir
+          persistentVolumeClaim:
+            claimName: out-pvc
+      containers:
+      - image: cxd9974/msc_worker:latest
+        name: worker
+        ports:
+        - containerPort: 3000
+        env:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+          ###test this...
+              name: rmq-default-user
+              key: username
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rmq-default-user
+              key: password
+        - name: PORT
+          value: "60008"
+          ##set PYTHONIOENCODING=UTF-8
+        - name: PYTHONIOENCODING
+          value: "UTF-8"
+          ###debug logs, enable 2 lines below to see print from python, disable on production
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: schedulerurl
+          value: "scheduler"
+        volumeMounts:
+          - mountPath: /repodir
+            name: repodir
+          - mountPath: /outdir
+            name: outdir
+      imagePullSecrets:
+      - name: regcred

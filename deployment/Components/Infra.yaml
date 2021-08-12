@@ -34,8 +34,8 @@ spec:
 #    limits:
 #      cpu: 800m
 #      memory: 1Gi
----
 ###### next, get a secret from docker login 
 ## kubectl create secret generic regcred     --from-file=.dockerconfigjson=/home/c00251686/.docker/config.json     --type=kubernetes.io/dockerconfigjson -n web
 ## kubectl create secret generic regcred     --from-file=.dockerconfigjson=/home/c00251686/.docker/config.json     --type=kubernetes.io/dockerconfigjson -n core
 ##
+

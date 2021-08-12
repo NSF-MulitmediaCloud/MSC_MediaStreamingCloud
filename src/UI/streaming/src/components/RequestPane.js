@@ -253,7 +253,8 @@ function RequestPane(props) {
       <TextField
             label="Video Source"
             variant="filled"
-            defaultValue="https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+            //defaultValue="https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+            defaultValue={'vidsrc/1/video.m3u8'}
             inputRef={(input) => vidsrc = input}
           />
         <Button variant="contained" color="secondary" onClick={reload}>
