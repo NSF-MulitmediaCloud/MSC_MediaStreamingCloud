@@ -1,4 +1,239 @@
-<h1> NSF CAREER: Developing a Flexible Serverless Multimedia Streaming Cloud Platform </h1>
-<p>
-As multimedia streaming is becoming an integral part of many applications, there is a desire to build a special-purpose platform that enables rapid development of streaming services and accommodates them in a robust and cost-efficient manner across the edge-to-cloud continuum. Accordingly, the goal of this project is to design the Multimedia Streaming Cloud (MSC) platform with high-level management abstractions that can reap the benefits of the continuum while hiding the complexity of working with it. MSC promotes the Function-as-a-Service computing paradigm and offers the Object-as-a-Service (OaaS) abstraction as a first-class citizen to represent various streaming sources, hence, relieving the users and developers from both the resource and data management difficulties. OaaS enables flexible migration of the objects across the continuum and accelerates the development of streaming services too. Preserving the object’s state facilitates seamless object migration, hence, elasticity and mobility of objects across the edge-to-cloud continuum are achieved. MSC offers cost-efficient and robust QoS to each streaming object via smart task management and resource allocation methods operating on heterogeneous cloud resources. An open-source prototype of the MSC platform is developed and tested via recording devices, a local edge computing system, and a public cloud to assess its usability and robustness.
-</p>
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="http://hpcclab.org/xmlrpc.php">	
+
+<!--[if lt IE 9]>
+<script src="http://hpcclab.org/wp-content/themes/the-box/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+	
+<title>NSF CAREER: Developing a Flexible Serverless Multimedia Streaming Cloud Platform &#8211; HPCC lab</title>
+<meta name='robots' content='max-image-preview:large' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="HPCC lab &raquo; Feed" href="http://hpcclab.org/index.php/feed/" />
+<link rel="alternate" type="application/rss+xml" title="HPCC lab &raquo; Comments Feed" href="http://hpcclab.org/index.php/comments/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.0.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.0.1\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/hpcclab.org\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.7.5"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([55357,56424,8205,55356,57212],[55357,56424,8203,55356,57212])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css'  href='http://hpcclab.org/wp-includes/css/dist/block-library/style.min.css?ver=5.7.5' type='text/css' media='all' />
+<link rel='stylesheet' id='thebox-fonts-css'  href='//fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C700%2C400italic%2C700italic%7COxygen%3A300%2C400%2C700&#038;subset=latin%2Clatin-ext' type='text/css' media='all' />
+<link rel='stylesheet' id='thebox-icons-css'  href='http://hpcclab.org/wp-content/themes/the-box/fonts/icons-font.css?ver=1.6' type='text/css' media='all' />
+<link rel='stylesheet' id='thebox-style-css'  href='http://hpcclab.org/wp-content/themes/the-box/style.css?ver=1.4.2.1' type='text/css' media='all' />
+<link rel="https://api.w.org/" href="http://hpcclab.org/index.php/wp-json/" /><link rel="alternate" type="application/json" href="http://hpcclab.org/index.php/wp-json/wp/v2/pages/105" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://hpcclab.org/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://hpcclab.org/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 5.7.5" />
+<link rel="canonical" href="http://hpcclab.org/index.php/projects/high-quality-video-streaming-using-cloud-services/" />
+<link rel='shortlink' href='http://hpcclab.org/?p=105' />
+<link rel="alternate" type="application/json+oembed" href="http://hpcclab.org/index.php/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fhpcclab.org%2Findex.php%2Fprojects%2Fhigh-quality-video-streaming-using-cloud-services%2F" />
+<link rel="alternate" type="text/xml+oembed" href="http://hpcclab.org/index.php/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fhpcclab.org%2Findex.php%2Fprojects%2Fhigh-quality-video-streaming-using-cloud-services%2F&#038;format=xml" />
+
+
+	<style type="text/css">
+		.main-navigation > div > ul,
+		#main input#submit,
+		#main button,
+		#main input[type="button"],
+		#main input[type="reset"],
+		#main input[type="submit"],
+		#content .page-numbers.current,
+		#content .page-numbers.current:hover,
+		#content .page-numbers a:hover {
+		background-color: #071477;	
+		}
+		#main input#submit:hover,
+		#main button:hover,
+		#main input[type="button"]:hover,
+		#main input[type="reset"]:hover,
+		#main input[type="submit"]:hover {
+		background-color: rgba(7,20,119, 0.9);		
+		}
+		.entry-time {
+		background-color: rgba(7,20,119, 0.7);		
+		}
+		.site-header .main-navigation ul ul a:hover,
+	    .site-header .main-navigation ul ul a:focus,
+	    .site-header .site-title a:hover,
+	    .site-header .site-title a:focus,
+	    .page-title a:hover,
+	    .entry-title a:hover,
+	    .entry-content a,
+	    .entry-content a:hover,
+	    .entry-summary a,
+	    .entry-summary a:hover,
+		.entry-footer a,
+	    .entry-footer a:hover,
+	    .entry-footer .icon-font,
+	    .entry-meta a,
+	    .author-bio a,
+	    .comments-area a,
+	    .page-title span,
+		#tertiary td a,
+		.more-link,
+		#nav-above a,
+	    #nav-below a,
+		#secondary a,
+		#secondary a:hover,
+		#secondary .widget_recent_comments a.url { 
+	    color: #071477;
+	    }
+	    .edit-link a {
+		border-color: #071477;
+	    }
+	    </style>
+
+	<style type="text/css" id="thebox-header-css">
+			.site-title,
+		.site-description {
+			position: absolute;
+			clip: rect(1px 1px 1px 1px); /* IE7 */
+			clip: rect(1px, 1px, 1px, 1px);
+		}
+		</style>
+	<link rel="icon" href="http://hpcclab.org/wp-content/uploads/2016/06/logo-HPCC.jpg" sizes="32x32" />
+<link rel="icon" href="http://hpcclab.org/wp-content/uploads/2016/06/logo-HPCC.jpg" sizes="192x192" />
+<link rel="apple-touch-icon" href="http://hpcclab.org/wp-content/uploads/2016/06/logo-HPCC.jpg" />
+<meta name="msapplication-TileImage" content="http://hpcclab.org/wp-content/uploads/2016/06/logo-HPCC.jpg" />
+</head>
+<body class="page-template page-template-no-sidebar page-template-no-sidebar-php page page-id-105 page-child parent-pageid-29">
+
+<div id="page">
+
+		<header id="masthead" class="site-header clearfix" role="banner">
+		<div class="site-brand clearfix">
+		
+			<hgroup>
+										<p class="site-title"><a href="http://hpcclab.org/" rel="home">HPCC lab</a></p>
+								</hgroup>
+			
+						
+			<div class="social-links">
+			
+								
+				
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+			</div><!-- .social-links-->
+			
+		</div>	
+		
+		<nav id="site-navigation" class="main-navigation" role="navigation">
+			<button class="menu-toggle"><span class="icon-font icon-menu"></span></button>
+			<div class="menu-mainmenu-container"><ul id="menu-mainmenu" class="menu"><li id="menu-item-15" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-15"><a href="http://hpcclab.org">Home</a></li>
+<li id="menu-item-33" class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-menu-ancestor current-menu-parent current-page-parent current_page_parent current_page_ancestor menu-item-has-children menu-item-33"><a href="http://hpcclab.org/index.php/projects/">Projects</a>
+<ul class="sub-menu">
+	<li id="menu-item-113" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-105 current_page_item menu-item-113"><a href="http://hpcclab.org/index.php/projects/high-quality-video-streaming-using-cloud-services/" aria-current="page">Multimedia Streaming Serverless Cloud</a></li>
+	<li id="menu-item-485" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-485"><a href="http://hpcclab.org/index.php/projects/heterogeneous-systems/">SmartSight: an AI-Based Computing Platform to Assist Blind and Visually Impaired People</a></li>
+	<li id="menu-item-112" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-112"><a href="http://hpcclab.org/index.php/projects/semantic-search-over-encrypted-data-in-cloud/">Edge-Based Intelligence for Privacy-Preserving Enterprise Search on the Cloud</a></li>
+	<li id="menu-item-157" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-157"><a href="http://hpcclab.org/index.php/projects/natural-disaster-management-using-community-clouds/">Federated Fog Computing for Remote Industry 4.0 Applications</a></li>
+	<li id="menu-item-116" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-116"><a href="http://hpcclab.org/index.php/projects/past-projects/">Past Projects</a></li>
+</ul>
+</li>
+<li id="menu-item-46" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-46"><a href="http://hpcclab.org/index.php/publications/">Publications</a>
+<ul class="sub-menu">
+	<li id="menu-item-840" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-840"><a href="http://hpcclab.org/index.php/publications/#books">Books</a></li>
+	<li id="menu-item-401" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-401"><a href="http://hpcclab.org/index.php/publications/#thesis">Theses</a></li>
+	<li id="menu-item-403" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-403"><a href="http://hpcclab.org/index.php/publications/#bookchapter">Book Chapters</a></li>
+	<li id="menu-item-402" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-402"><a href="http://hpcclab.org/index.php/publications/#jnl">Journals</a></li>
+	<li id="menu-item-404" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-404"><a href="http://hpcclab.org/index.php/publications/#conf">Conferences</a></li>
+	<li id="menu-item-536" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-536"><a href="http://hpcclab.org/index.php/publications/#talks">Talks</a></li>
+	<li id="menu-item-554" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-554"><a href="http://hpcclab.org/index.php/publications/#patent">Patents</a></li>
+</ul>
+</li>
+<li id="menu-item-51" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-51"><a href="http://hpcclab.org/index.php/team/">Team</a></li>
+<li id="menu-item-55" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-55"><a href="http://hpcclab.org/index.php/contact-us/">Contact Us</a></li>
+<li id="menu-item-287" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-287"><a href="http://hpcclab.org/index.php/open-positions/">Open Positions</a></li>
+<li id="menu-item-564" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-564"><a target="_blank" rel="noopener" href="https://github.com/hpcclab/">Github</a></li>
+<li id="menu-item-271" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-271"><a href="http://hpcclab.org/index.php/news/">News</a></li>
+<li id="menu-item-45" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-45"><a target="_blank" rel="noopener" href="https://mhsamsal.wordpress.com/">Blog</a></li>
+<li id="menu-item-198" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-198"><a href="http://hpcclab.org/index.php/photo-gallery/">Photo Gallery</a></li>
+</ul></div>		</nav><!-- #site-navigation -->
+		
+	</header><!-- #masthead .site-header -->
+
+	<div id="main" class="site-main clearfix">
+		
+						<a class="header-image" href="http://hpcclab.org/" title="HPCC lab" rel="home">
+					<img src="http://hpcclab.org/wp-content/uploads/2016/04/cropped-title.png" width="980" height="244" alt="" />
+				</a>
+				
+		<div id="primary" class="content-area">
+			<div id="content" class="site-content" role="main">
+
+				
+					
+<article id="post-105" class="post-105 page type-page status-publish has-post-thumbnail hentry">
+	<header class="entry-header">
+		<h1 class="entry-title">NSF CAREER: Developing a Flexible Serverless Multimedia Streaming Cloud Platform</h1>
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>As multimedia streaming is becoming an integral part of many applications, there is a desire to build a special-purpose platform that enables rapid development of streaming services and accommodates them in a robust and cost-efficient manner across the edge-to-cloud continuum. Accordingly, the goal of this project is to design the Multimedia Streaming Cloud (MSC) platform with high-level management abstractions that can reap the benefits of the continuum while hiding the complexity of working with it. MSC promotes the Function-as-a-Service computing paradigm and offers the Object-as-a-Service (OaaS) abstraction as a first-class citizen to represent various streaming sources, hence, relieving the users and developers from both the resource and data management difficulties. OaaS enables flexible migration of the objects across the continuum and accelerates the development of streaming services too. Preserving the object&#8217;s state facilitates seamless object migration, hence, elasticity and mobility of objects across the edge-to-cloud continuum are achieved. MSC offers cost-efficient and robust QoS to each streaming object via smart task management and resource allocation methods operating on heterogeneous cloud resources. An open-source prototype of the MSC platform is developed and tested via recording devices, a local edge computing system, and a public cloud to assess its usability and robustness.</p>
+
+
+<div class="wp-block-image"><figure class="aligncenter size-large is-resized"><img loading="lazy" src="http://hpcclab.org/wp-content/uploads/2021/12/Screenshot-from-2021-12-20-00-23-15.png" alt="" class="wp-image-853" width="456" height="324" srcset="http://hpcclab.org/wp-content/uploads/2021/12/Screenshot-from-2021-12-20-00-23-15.png 771w, http://hpcclab.org/wp-content/uploads/2021/12/Screenshot-from-2021-12-20-00-23-15-300x213.png 300w, http://hpcclab.org/wp-content/uploads/2021/12/Screenshot-from-2021-12-20-00-23-15-768x546.png 768w, http://hpcclab.org/wp-content/uploads/2021/12/Screenshot-from-2021-12-20-00-23-15-600x426.png 600w" sizes="(max-width: 456px) 100vw, 456px" /><figcaption>Bird-eye view of the MSC streaming Cloud platform.</figcaption></figure></div>
+
+
+
+<p>The MSC platform democratizes multimedia streaming and lays the foundation for the next generation applications operating based on multimedia streaming. MSC will pave the way for stream providers to become solution-oriented and let them focus on developing advanced streaming services and integrate them to their applications. The project results will impact not only the forefront of scientific discovery, but also benefit the society by offering flexible and robust streaming services across various applications. The object abstraction and the intelligent resource allocation methods of the MSC platform can be adapted to and employed in other soft real-time computing systems. The project will impact computer science and IT education by integrating applications into the distributed computing curriculum.</p>
+			</div><!-- .entry-content -->
+	<footer class="entry-footer">
+		<p>
+								</p>
+	</footer>
+</article><!-- #post-105 -->
+
+					
+				
+			</div><!-- #content .site-content -->
+		</div><!-- #primary .content-area -->
+
+		
+	</div><!-- #main .site-main -->
+
+	<footer id="colophon" class="site-footer clearfix" role="contentinfo">
+
+				
+		<div class="credits">
+			&copy; 2022 HPCC lab<br>
+			<a href="http://wordpress.org/">Powered by WordPress</a>
+			<span class="sep"> / </span>
+			Theme: The Box by <a href="http://www.designlabthemes.com/" rel="designer">Design Lab</a>		</div>
+		
+		
+	</footer><!-- #colophon .site-footer -->
+</div><!-- #page -->
+
+<script type='text/javascript' src='http://hpcclab.org/wp-content/themes/the-box/js/navigation.js?ver=20120206' id='thebox-navigation-js'></script>
+<script type='text/javascript' src='http://hpcclab.org/wp-includes/js/wp-embed.min.js?ver=5.7.5' id='wp-embed-js'></script>
+
+</body>
+</html>
